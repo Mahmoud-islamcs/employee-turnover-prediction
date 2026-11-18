@@ -14,7 +14,3 @@ The senior leadership team at Salifort Motors aims to increase employee retentio
 - **Predictive Modeling**: Train and evaluate predictive models (Regression or Tree-based models such as Random Forest and XGBoost).
 - **Business Insights**: Provide actionable recommendations to improve employee satisfaction and retention.
 
-## Repository Structure
-- `notebooks/` – Jupyter notebooks for EDA and model development
-- `data/` – Project dataset (if applicable)
-- `README.md` – Project overview and documentation
