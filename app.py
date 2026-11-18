@@ -9,7 +9,6 @@ from pathlib import Path
 
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 import streamlit as st
 
 st.set_page_config(
@@ -350,27 +349,27 @@ with st.sidebar.expander("Project Deliverables", expanded=False):
             data=csv_bytes,
             file_name="cleaned_hr_dataset.csv",
             mime="text/csv",
-            use_container_width=True,
+            width='stretch',
         )
 
-    pptx_bytes = _load_deliverable("executive-summary.pptx")
-    if pptx_bytes:
+    pdf_bytes = _load_deliverable("executive-summary.pdf")
+    if pdf_bytes:
         st.download_button(
-            label="Executive Summary (PPTX)",
-            data=pptx_bytes,
-            file_name="Salifort_Executive_Summary.pptx",
-            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
-            use_container_width=True,
+            label="Executive Summary (PDF)",
+            data=pdf_bytes,
+            file_name="Salifort_Executive_Summary.pdf",
+            mime="application/pdf",
+            width='stretch',
         )
 
-    docx_bytes = _load_deliverable("PACE-strategy-document.docx")
-    if docx_bytes:
+    pdf_bytes = _load_deliverable("PACE-strategy-document.pdf")
+    if pdf_bytes:
         st.download_button(
-            label="PACE Strategy Doc (DOCX)",
-            data=docx_bytes,
-            file_name="PACE_Strategy_Document.docx",
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            use_container_width=True,
+            label="PACE Strategy Doc (PDF)",
+            data=pdf_bytes,
+            file_name="PACE_Strategy_Document.pdf",
+            mime="application/pdf",
+            width='stretch',
         )
 
 st.sidebar.divider()
@@ -748,10 +747,45 @@ elif page == PAGES[3]:
     with tabs[0]:
         st.markdown("#### Logistic regression")
         c = st.columns(4)
-        c[0].metric("Training rows", "11,167", "outliers removed", delta_color="off", delta_arrow="off")
-        c[1].metric("Split", "75 / 25", "stratified, rs=0", delta_color="off", delta_arrow="off")
-        c[2].metric("Test rows", "2,792")
-        c[3].metric("Max iter", "500")
+        with c[0]:
+            st.metric(
+                label="Modeling Sample",
+                value="11,167",
+                delta="-824 outliers removed",
+                delta_color="off",
+                help="Total observations after filtering extreme tenure outliers (> 5.5 years) to satisfy logistic regression assumptions."
+            )
+            st.caption("8,375 train · 2,792 test")
+
+        with c[1]:
+            st.metric(
+                label="Data Partition",
+                value="75 / 25",
+                delta="Stratified (rs=0)",
+                delta_color="off",
+                help="Stratified split preserving the exact 16.6% turnover class ratio across training and testing partitions."
+            )
+            st.caption("Stratified sampling")
+
+        with c[2]:
+            st.metric(
+                label="Hold-out Test Set",
+                value="2,792",
+                delta="25% evaluation rows",
+                delta_color="off",
+                help="Independent hold-out test set used to evaluate true generalization, confusion matrix, and ROC-AUC."
+            )
+            st.caption("Unseen test rows")
+
+        with c[3]:
+            st.metric(
+                label="Solver Iterations",
+                value="500",
+                delta="max_iter (converged)",
+                delta_color="normal",
+                help="Maximum iterations allocated to the L-BFGS optimization algorithm to guarantee complete gradient convergence."
+            )
+            st.caption("Guaranteed convergence")
 
         st.markdown("**Assumptions checked**")
         st.markdown(
